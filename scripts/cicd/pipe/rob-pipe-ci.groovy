@@ -12,13 +12,19 @@ spec:
     image: jenkins/jnlp-slave:3.27-1
     args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
   - name: maven
-    image: maven:3.3.9-jdk-8-alpine
+    image: maven:3.6.3-jdk-11-slim
     imagePullPolicy: IfNotPresent
     command:
     - cat
     tty: true
+  volumeMounts:
+    - name: nexus-mirror-cfg
+      mountPath: /tmp/nexus-mirror-cfg
   restartPolicy: Never
   volumes:
+    - name: nexus-mirror-cfg
+      configMap: 
+        name: nexus-mirror-cfg
     - name: myregistry-cred
       projected:
         sources:
@@ -58,7 +64,9 @@ environment {
             steps{
                 container("maven"){
                     script{
-                        sh "mvn clean package sonar:sonar -Dsonar.host.url=${SONAR_URL} -DskipTests=true -X"
+                        sh "ls -l /tmp/nexus-mirror-cfg" 
+                        sh "cat /tmp/nexus-mirror-cfg/settings-proxy.xml"
+                        sh "mvn -s /tmp/nexus-mirror-cfg/settings-proxy.xml clean package sonar:sonar -Dsonar.host.url=${SONAR_URL} -DskipTests=true -X"
                     }
                 }
             }
