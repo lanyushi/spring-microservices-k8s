@@ -17,7 +17,7 @@ spec:
     command:
     - cat
     tty: true
-  volumeMounts:
+    volumeMounts:
     - name: nexus-mirror-cfg
       mountPath: /tmp/nexus-mirror-cfg
   restartPolicy: Never
@@ -66,10 +66,23 @@ environment {
                     script{
                         sh "ls -l /tmp/nexus-mirror-cfg" 
                         sh "cat /tmp/nexus-mirror-cfg/settings-proxy.xml"
-                        sh "mvn -s /tmp/nexus-mirror-cfg/settings-proxy.xml clean package sonar:sonar -Dsonar.host.url=${SONAR_URL} -DskipTests=true -X"
+                        sh "mvn -s /tmp/nexus-mirror-cfg/settings-proxy.xml clean package sonar:sonar -Dsonar.host.url=${SONAR_URL} -DskipTests=true "
                     }
                 }
             }
+        }
+
+
+        stage('Binary Checkin'){
+
+            steps{
+                container("maven"){
+                    script{
+                        sh "mvn -s /tmp/nexus-mirror-cfg/settings-proxy.xml clean deploy  -DskipTests=true "
+                    }
+                }
+            }
+
         }
 
    }

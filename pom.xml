@@ -13,6 +13,31 @@
 		<module>department-service</module>
 		<module>organization-service</module>
 		<module>gateway-service</module>
-    </modules>
+	</modules>
+
+
+	
+	<profiles>
+		<profile>
+			<id>employee</id>
+			<modules>
+				<module>employee-service</module>
+			</modules>
+		</profile>
+
+
+		<profile>
+			<id>default</id>
+			<activation>
+			   <activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+			   <module>employee-service</module>
+			   <module>department-service</module>
+			   <module>organization-service</module>
+			   <module>gateway-service</module>
+			</modules>
+		 </profile>
+	 </profiles>
 	
 </project>

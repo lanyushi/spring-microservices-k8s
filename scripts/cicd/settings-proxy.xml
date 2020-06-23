@@ -1,38 +1,76 @@
 <!-- kc create configmap nexus-mirror-cfg from-file settings-proxy.xml -->
 <settings>
-    <mirrors>
-      <mirror>
-        <!--This sends everything else to /public -->
-        <id>nexus</id>
-        <mirrorOf>*</mirrorOf>
-        <url>http://proxy.nexus.lab.app.10.16.202.119.nip.io/repository/maven-central/</url>
-      </mirror>
-    </mirrors>
-    <profiles>
+  <mirrors>
+    <mirror>
+      <!--This sends everything else to /public -->
+      <id>nexus</id>
+      <mirrorOf>central</mirrorOf>
+      <url>http://proxy.nexus.lab.app.10.16.202.119.nip.io/repository/maven-central</url>
+    </mirror>
+
+    <mirror>
+      <!--This sends everything else to /public -->
+      <id>spring</id>
+      <mirrorOf>spring-milestones</mirrorOf>
+      <url>http://proxy.nexus.lab.app.10.16.202.119.nip.io/repository/spring-proxy</url>
+    </mirror>
+  </mirrors>
+
+  <servers>
+    <server>
+      <id>vmware-java</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+  </servers>
+ 
+ 
+
+  <profiles>
+  
+
       <profile>
-        <id>nexus</id>
-        <!--Enable snapshots for the built in central repo to direct -->
-        <!--all requests to nexus via the mirror -->
-        <repositories>
-          <repository>
-            <id>central</id>
-            <url>http://central</url>
-            <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
-          </repository>
-        </repositories>
-       <pluginRepositories>
-          <pluginRepository>
-            <id>central</id>
-            <url>http://central</url>
-            <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
-          </pluginRepository>
-        </pluginRepositories>
-      </profile>
-    </profiles>
-    <activeProfiles>
-      <!--make the profile active all the time -->
-      <activeProfile>nexus</activeProfile>
-    </activeProfiles>
-  </settings>
+        <id>vmware-java</id>
+        <properties>
+          <altSnapshotDeploymentRepository>snapshots::default::http://admin:admin123@proxy.nexus.lab.app.10.16.202.119.nip.io/repository/vmware-java</altSnapshotDeploymentRepository>
+          <altReleaseDeploymentRepository>releases::default::http://admin:admin123@proxy.nexus.lab.app.10.16.202.119.nip.io/repository/vmware-java</altReleaseDeploymentRepository>
+        </properties>
+
+    </profile>
+
+ 
+    <profile>
+      <id>nexus</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <!--make the profile active all the time -->
+    <activeProfile>nexus</activeProfile>
+    <activeProfile>vmware-java</activeProfile>
+  </activeProfiles>
+</settings>
