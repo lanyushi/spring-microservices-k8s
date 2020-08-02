@@ -6,10 +6,10 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   backend:
-    serviceName: default-http-backend
+    serviceName: gateway
     servicePort: 80
   rules:
-  - host: microservices-cluster.info
+  - host: a7d85d441f26e4f5cae9cd22b542f150-2333bd8a574deef1.elb.us-east-2.amazonaws.com
     http:
       paths:
       - path: /employee
